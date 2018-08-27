@@ -29,6 +29,8 @@ struct Game
     
     var consumedIndexes: [Int] = []
     
+    var previousIndexes = [Int]()
+    
     let question1 = QuestionsModel(question: "Four stories about a honey-loving bear and his friends", answerChoices: ["Dumbo", "Bolt", "Oliver and Company", "The many adventures of Winnie the Pooh"], correctAnswer: "The many adventures of Winnie the Pooh")
     
     let question2 = QuestionsModel(question: "A wooden puppet needs to be brave, truthful and unselfish to become human", answerChoices: ["Brave", "Peter Pan", "Saludos Amigos", "Pinocchio"], correctAnswer: "Pinocchio")
@@ -61,6 +63,21 @@ struct Game
         selectedIndex = GKRandomSource.sharedRandom().nextInt(upperBound: questions.count)
         correctAnswer = questions[selectedIndex].correctAnswer
         questionToDisplay = questions[selectedIndex]
+    }
+    
+    mutating func randomQuestions() -> QuestionsModel
+    {
+        var index = GKRandomSource.sharedRandom().nextInt(upperBound: questions.count)
+        
+        while previousIndexes.contains(index)
+        {
+            index = GKRandomSource.sharedRandom().nextInt(upperBound: questions.count)
+        }
+        
+        previousIndexes.append(index)
+        
+        return questions[index]
+
     }
 
     mutating func randomizedAnswerChoices()
